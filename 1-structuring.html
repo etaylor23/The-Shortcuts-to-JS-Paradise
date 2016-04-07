@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Structuring JS</title>
+  </head>
+  <body>
+    <h1>Structuring JS</h1>
+
+    <div id="inventoryList">
+
+    </div>
+
+
+
+    <script type="text/javascript">
+
+      var Outing = function outing(name) {
+        this.name = name;
+        this.buildInventory = function(inventory) {
+          var builtInventory = "<ul>";
+          for(var i = 0; i < inventory.length; i++) {
+            builtInventory += "<li>" + inventory[i] + "</li>";
+          }
+          builtInventory += "</ul>";
+          return builtInventory;
+        }
+        //Start adding your new team list here
+
+      }
+
+      var FB = {
+         init: function(){
+           this.doStuff();
+         },
+         doStuff:function() {
+           var inventory = ["Money","Raincoat","Umbrella"];
+           var zoo = new Outing("Zoo Trip");
+           var zooInventory = zoo.buildInventory(inventory);
+           console.log(zooInventory);
+         }
+      };
+
+      FB.init();
+      //Activity: Create a team list for your new zoo outing and write a createTeamList function in a similar way to buildInventory
+      //Hint: You will need to define a new team list:
+      /*
+      var teamList = [
+        {"name":"Joe", "requiresLunch":true, vegetarian:false, wheatIntolerant: false},
+        {"name":"Sam", "requiresLunch":true, vegetarian:true, wheatIntolerant: false},
+        {"name":"Tom", "requiresLunch":false, vegetarian:false, wheatIntolerant: false},
+        {"name":"Tom", "requiresLunch":true, vegetarian:true, wheatIntolerant: true}
+      ];
+      */
+
+    </script>
+  </body>
+</html>

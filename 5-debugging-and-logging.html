@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Debugging and Logging</title>
+    <script type="text/javascript" src="app/js/jQuery-2-2-3.js"></script>
+  </head>
+  <body>
+    <h1>Debugging and Logging</h1>
+
+    <div id="inventoryList">
+
+    </div>
+    <div id="teamList">
+
+    </div>
+
+
+
+    <script type="text/javascript">
+
+      var Outing = function outing(name) {
+        this.name = name;
+        this.buildInventory = function(inventory) {
+          var builtInventory = "<ul>";
+          $.each(inventory, function(index, value) {
+            builtInventory += "<li>" + inventory[index] + "</li>";
+          })
+
+          builtInventory += "</ul>";
+          return builtInventory;
+        }
+        this.createTeamList = function(teamDetails) {
+          var teamList = "<ol>";
+
+          //Alter this loop
+          $.each(teamDetails, function(index, value) {
+            teamList += "<li><div>" + teamDetails[index].name + "</div>"
+            if(teamDetails[index].requiresLunch === true) {
+              teamList += "<div>Needs Lunch</div>";
+            }
+            if(teamDetails[index].vegetarian) {
+              teamList += "<div>Vegetarian</div>"
+            }
+            if(teamDetails[index].wheatIntolerant) teamList += "<div>Wheat Intolerant</div>";
+            teamList += "</li>";
+          })
+          teamList += "</ol>";
+          return teamList;
+        }
+      }
+
+      var globalDefs = {
+        inventory: ["Money","Raincoat","Umbrella"],
+        teamList: [[
+          {"name":"Joe", "requiresLunch":true, vegetarian:false, wheatIntolerant: false},
+          {"name":"Sam", "requiresLunch":true, vegetarian:true, wheatIntolerant: false},
+          {"name":"Tom", "requiresLunch":false, vegetarian:false, wheatIntolerant: false},
+          {"name":"Tom", "requiresLunch":true, vegetarian:true, wheatIntolerant: true}
+        ]]
+      }
+
+      var FB = {
+         /* This is the single entry point for all JS */
+         init: function(){
+           this.doStuff();
+         },
+         doStuff:function() {
+
+           var zoo = new Outing("Zoo Trip");
+           var zooInventory = zoo.buildInventory(globalDefs.inventory);
+           var zooTeamList = zoo.createTeamList(globalDefs.teamList);
+
+           $("#inventoryList").html(zooInventory);
+           $("#teamList").html(zooTeamList);
+         }
+      };
+
+      jQuery(document).ready(function($) {
+        //debugger;
+        FB.init();
+      })
+      //There are a number of ways of saying document ready, the above is the most well known
+      //Activity: Use the debugger; and breakpoints with console logs to try and work out why your application is breaking
+      //Clue: Find the existing commented debugger;
+    </script>
+  </body>
+</html>

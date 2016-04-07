@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Manipulating the DOM</title>
+  </head>
+  <body>
+    <h1>Manipulating the DOM</h1>
+
+    <div id="inventoryList">
+
+    </div>
+    <div id="teamList">
+
+    </div>
+
+
+
+    <script type="text/javascript">
+
+      var Outing = function outing(name) {
+        this.name = name;
+        this.buildInventory = function(inventory) {
+          var builtInventory = "<ul>";
+          for(var i = 0; i < inventory.length; i++) {
+            builtInventory += "<li>" + inventory[i] + "</li>";
+          }
+          builtInventory += "</ul>";
+          return builtInventory;
+        }
+        this.createTeamList = function(teamDetails) {
+          var teamList = "<ol>";
+          for(var i = 0; i < teamDetails.length; i++) {
+            teamList += "<li><div>" + teamDetails[i].name + "</div>"
+            if(teamDetails[i].requiresLunch === true) {
+              teamList += "<div>Needs Lunch</div>";
+            }
+            if(teamDetails[i].vegetarian) {
+              teamList += "<div>Vegetarian</div>"
+            }
+            if(teamDetails[i].wheatIntolerant) teamList += "<div>Wheat Intolerant</div>";
+            teamList += "</li>";
+          }
+          teamList += "</ol>";
+          return teamList;
+        }
+      }
+
+      var FB = {
+         /* This is the single entry point for all JS */
+         init: function(){
+           this.doStuff();
+         },
+         /* This is a helper function that could potentially be used anywhere */
+         updateDom: function(el, val) {
+           document.getElementById(el).innerHTML = val;
+         },
+         doStuff:function() {
+           var inventory = ["Money","Raincoat","Umbrella"];
+           var teamList = [
+             {"name":"Joe", "requiresLunch":true, vegetarian:false, wheatIntolerant: false},
+             {"name":"Sam", "requiresLunch":true, vegetarian:true, wheatIntolerant: false},
+             {"name":"Tom", "requiresLunch":false, vegetarian:false, wheatIntolerant: false},
+             {"name":"Tom", "requiresLunch":true, vegetarian:true, wheatIntolerant: true}
+           ];
+           var zoo = new Outing("Zoo Trip");
+           var zooInventory = zoo.buildInventory(inventory);
+           var zooTeamList = zoo.createTeamList(teamList);
+           this.updateDom("inventoryList", zooInventory);
+           this.updateDom("teamList", zooTeamList);
+         }
+      };
+
+      FB.init();
+
+    </script>
+  </body>
+</html>

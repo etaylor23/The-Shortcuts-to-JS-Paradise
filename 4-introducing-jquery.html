@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Introducting jQuery</title>
+    <script type="text/javascript" src="app/js/jQuery-2-2-3.js"></script>
+  </head>
+  <body>
+    <h1>Introducting jQuery</h1>
+
+    <div id="inventoryList">
+
+    </div>
+    <div id="teamList">
+
+    </div>
+
+
+
+    <script type="text/javascript">
+
+      var Outing = function outing(name) {
+        this.name = name;
+        this.buildInventory = function(inventory) {
+          var builtInventory = "<ul>";
+          $.each(inventory, function(index, value) {
+            builtInventory += "<li>" + inventory[index] + "</li>";
+          })
+
+          /*
+          for(var i = 0; i < inventory.length; i++) {
+            builtInventory += "<li>" + inventory[i] + "</li>";
+          }
+          */
+
+          builtInventory += "</ul>";
+          return builtInventory;
+        }
+        this.createTeamList = function(teamDetails) {
+          var teamList = "<ol>";
+
+          //Alter this loop
+          for(var i = 0; i < teamDetails.length; i++) {
+            teamList += "<li><div>" + teamDetails[i].name + "</div>"
+            if(teamDetails[i].requiresLunch === true) {
+              teamList += "<div>Needs Lunch</div>";
+            }
+            if(teamDetails[i].vegetarian) {
+              teamList += "<div>Vegetarian</div>"
+            }
+            if(teamDetails[i].wheatIntolerant) teamList += "<div>Wheat Intolerant</div>";
+            teamList += "</li>";
+          }
+          teamList += "</ol>";
+          return teamList;
+        }
+      }
+
+      var globalDefs = {
+        inventory: ["Money","Raincoat","Umbrella"],
+        teamList: [
+          {"name":"Joe", "requiresLunch":true, vegetarian:false, wheatIntolerant: false},
+          {"name":"Sam", "requiresLunch":true, vegetarian:true, wheatIntolerant: false},
+          {"name":"Tom", "requiresLunch":false, vegetarian:false, wheatIntolerant: false},
+          {"name":"Tom", "requiresLunch":true, vegetarian:true, wheatIntolerant: true}
+        ]
+      }
+
+      var FB = {
+         /* This is the single entry point for all JS */
+         init: function(){
+           this.doStuff();
+         },
+         /* This is a helper function that could potentially be used anywhere */
+         updateDom: function(el, val) {
+           document.getElementById(el).innerHTML = val;
+         },
+         doStuff:function() {
+
+           var zoo = new Outing("Zoo Trip");
+           var zooInventory = zoo.buildInventory(globalDefs.inventory);
+           var zooTeamList = zoo.createTeamList(globalDefs.teamList);
+
+           //$(".example").html(someVal);
+           this.updateDom("inventoryList", zooInventory);
+           this.updateDom("teamList", zooTeamList);
+
+         }
+      };
+
+      jQuery(document).ready(function($) {
+        FB.init();
+      })
+      //There are a number of ways of saying document ready, the above is the most well known
+      //https://learn.jquery.com/using-jquery-core/document-ready/
+      //Activity: Switch out your custom for loop that creates your team list for jQuery's each function
+      //Clue: Use the inventory function to base your answer on
+      //Activity: Switch out the custom updateDom function for a jQuery selector with the html() function
+
+    </script>
+  </body>
+</html>

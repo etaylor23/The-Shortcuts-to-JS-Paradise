@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>The Road To Plugin Heaven</title>
+    <script type="text/javascript" src="app/js/jQuery-2-2-3.js"></script>
+    <script type="text/javascript" src="app/js/lodash-4-8-2.js"></script>
+    <script type="text/javascript" src="app/js/handlebars-v4.0.5.js"></script>
+
+  </head>
+  <body>
+    <h1>The Road To Plugin Heaven</h1>
+
+    <div id="inventoryList">
+
+    </div>
+    <div id="teamList">
+
+    </div>
+
+
+
+    <script type="text/javascript">
+
+      var globalDefs = {
+        inventory: ["Money","Raincoat","Umbrella"],
+        teamList: [
+          {"name":"Joe", "requiresLunch":true, vegetarian:false, wheatIntolerant: false},
+          {"name":"Sam", "requiresLunch":true, vegetarian:true, wheatIntolerant: false},
+          {"name":"Tom", "requiresLunch":false, vegetarian:false, wheatIntolerant: false},
+          {"name":"David", "requiresLunch":true, vegetarian:true, wheatIntolerant: true}
+        ],
+        museumInventory: ["Money","Raincoat","Map"],
+        museumTeamList: [
+          {"name":"Joe", "requiresLunch":true, vegetarian:false, wheatIntolerant: false},
+          {"name":"Sam", "requiresLunch":true, vegetarian:true, wheatIntolerant: false},
+          {"name":"Ranjeet", "requiresLunch":false, vegetarian:false, wheatIntolerant: false},
+          {"name":"David", "requiresLunch":true, vegetarian:true, wheatIntolerant: true}
+        ],
+        Selectors: {
+          //InventoryList: "#inventoryList",
+          //TeamList: "#teamList",
+          TeamMembers:".teamMembers",
+          Body:"body"
+        }
+      }
+
+      var Outing = function outing(name) {
+        this.name = name;
+        this.buildInventory = function(inventory) {
+          var source   = $("#inventory-template").html();
+          var template = Handlebars.compile(source);
+          var html = template(inventory);
+
+          return html;
+        }
+        this.createTeamList = function(teamDetails) {
+          /*var teamList = "<ol>";
+
+          $.each(teamDetails, function(index, value) {
+            teamList += "<li><div>" + teamDetails[index].name + "</div>"
+            teamDetails[index].requiresLunch ? teamList += "<div>Vegetarian</div>" : console.log(teamDetails[index].name + " doesn't require lunch");
+            teamDetails[index].vegetarian ? teamList += "<div>Vegetarian</div>" : console.log(teamDetails[index].name + " isn't a vegetarian");
+            teamDetails[index].wheatIntolerant ? teamList += "<div>Wheat Intolerant</div>" : console.log(teamDetails[index].name + " isn't wheat intolerant");
+
+            teamList += "</li>";
+          })
+
+          teamList += "</ol>";*/
+          var source   = $("#name-template").html();
+          var template = Handlebars.compile(source);
+          var html = template(teamDetails);
+
+          return html;
+        }
+
+        this.teamMemberDetails = function(teamMember) {
+          var source   = $("#details-template").html();
+          var template = Handlebars.compile(source);
+          var html = template(teamMember);
+
+          return html;
+        },
+
+        this.showDetails = function(zoo) {
+          var that = this;
+          $(globalDefs.Selectors.TeamMembers).on("click", "li", that, function(e) {
+            if($(this).hasClass("active")) {
+              $(this).removeClass("active").children("div").remove();
+            } else {
+              var that = e.data;
+              var name = $(this).data("name");
+              var record = _.find(globalDefs.teamList, {'name': name});
+              var parsedDetails = that.teamMemberDetails(record);
+              $(this).append(parsedDetails);
+              $(this).addClass("active");
+            }
+
+          })
+        }
+      }
+
+      var FB = {
+         /* This is the single entry point for all JS */
+         init: function(){
+           this.outingTrip("Zoo Trip", globalDefs.inventory, globalDefs.teamList);
+
+         },
+         outingTrip:function(tripName, inventory, teamList) {
+           var outing = new Outing(tripName);
+           var outingInventory = outing.buildInventory(inventory);
+           var outingTeamList = outing.createTeamList(teamList);
+
+           //$(globalDefs.Selectors.InventoryList).html(outingInventory);
+           //$(globalDefs.Selectors.TeamList).html(outingTeamList);
+
+           $(globalDefs.Selectors.Body).append(outingInventory + outingTeamList)
+
+           outing.showDetails();
+
+           return outing;
+         },
+
+      };
+
+      jQuery(document).ready(function($) {
+        FB.init();
+      })
+      //There are a number of ways of saying document ready, the above is the most well known
+
+    </script>
+
+    <script id="inventory-template" type="text/x-handlebars-template">
+      <div>
+        <h2>Things You'll Need</h2>
+        <ul class="teamMembers">
+        {{#each this}}
+          <li>{{this}}</li>
+        {{/each}}
+        </ul>
+      </div>
+    </script>
+
+    <script id="name-template" type="text/x-handlebars-template">
+      <div>
+        <h2>Attendees</h2>
+        <ul class="teamMembers">
+        {{#each this}}
+          <li data-name="{{this.name}}">{{this.name}}</li>
+        {{/each}}
+        </ul>
+      </div>
+    </script>
+
+    <script id="details-template" type="text/x-handlebars-template">
+      <div>
+        <ul class="teamMembers">
+          {{#if requiresLunch}}
+            <li>Reqires Lunch</li>
+            {{#if vegetarian}}<li>Vegetarian</li>{{/if}}
+            {{#if wheatIntolerant}}<li>Lunch cannot contain wheat</li>{{/if}}
+            {{else}}
+            <li>No lunch required</li>
+          {{/if}}
+        </ul>
+      </div>
+    </script>
+
+  </body>
+</html>
